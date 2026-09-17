@@ -47,7 +47,7 @@ ai-skills/
 | **ai-coder** | 在现有项目中按仓库约定实现前后端/全栈功能并验证 | 新增功能、页面、接口、范围明确的重构 |
 | **code-review** | 对分支 / PR / 提交 / 未提交改动做规范与需求双轴审查（默认只报告不改代码） | 合并前检查、review since X |
 | **diagnosing-bugs** | 以可复现症状与证据定位故障；仅诊断时不自动改代码 | debug、根因分析、性能回退 |
-| **hs-warranty-report** | 按售后报工规范生成「项目名称」与「具体工作内容」（现象 / 过程 / 输出物） | 质保报工、整理近一周 session |
+| **hs-warranty-report** | 按售后报工规范生成「项目名称」与「具体工作内容」（现象 / 过程 / 输出物） | 质保报工、日报整理、本周 git + session |
 | **storage-analyzer** | 只读扫描磁盘占用，三级清理分级，生成可一键清理的交互式 HTML 报告 | 磁盘满了、清理空间、storage analysis |
 
 ## Agents 一览（`agents/`）
