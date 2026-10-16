@@ -938,6 +938,7 @@
     <a class="hud-brand" href="#">AI·<span>SKILLS</span></a>
     <ul class="hud-links">
       <li><a href="#skills">Skills</a></li>
+      <li><a href="#agents">Agents</a></li>
       <li><a href="#workflows">Workflows</a></li>
       <li><a href="#install">Install</a></li>
     </ul>
@@ -993,6 +994,14 @@
         </div>
         <div id="skill-groups"></div>
         <p class="empty" id="empty-skills" role="status">没有匹配的 Skill，请调整关键词或分组。</p>
+      </section>
+      <section id="agents" aria-labelledby="agents-heading">
+        <div class="section-head">
+          <p class="eyebrow">Domains · agents/</p>
+          <h2 id="agents-heading">领域 Agents</h2>
+          <p>按原 agents/&lt;领域&gt;/skills/&lt;name&gt;/ 归属汇总 5 个领域：可整包一键安装，或进入工作流查看选择建议。</p>
+        </div>
+        <div id="agent-domains"></div>
       </section>
       <section id="workflows" aria-labelledby="workflows-heading">
         <div class="section-head">
@@ -1722,136 +1731,31 @@
     } catch {}
     loadStarCount();
 
-    const core = [
-      ["requirement-extractor", "从 Word / Excel / PDF 抽取功能清单，可追溯出处", "功能清单、RFP、范围澄清"],
-      ["wcs-requirement-extractor", "锚定 WCS 职责边界与分类口径的需求抽取", "WCS 需求、功能清单"],
-      ["harness-maintainer", "Harness 初始化、增量维护与审计", "新项目接入、文档同步"],
-      ["ai-coder", "按仓库约定落地前后端/全栈功能", "新增功能、页面、接口"],
-      ["code-review", "Standards × Spec 双轴审查（默认只报告）", "合并前检查、review since X"],
-      ["diagnosing-bugs", "症状驱动的根因定位；仅诊断时不改代码", "debug、性能回退"],
-      ["hs-warranty-report", "售后报工：现象 / 过程 / 输出物（默认当前项目当前周）", "售后报工、日报 / 周报整理"],
-      ["storage-analyzer", "只读磁盘扫描与可清理交互报告", "磁盘满了、清理空间"],
-      ["byd-wms-pda-style", "比亚迪 WMS PDA 固定主题、页面模板与样式一致性校验", "PDA 页面、统一样式、Element Plus"],
-      ["byd-wms-manage-style", "比亚迪 WMS 管理端蓝白主题、紧凑查询区与统一弹窗 / 抽屉", "管理端页面、统一后台样式"],
-    ];
-
-    const domains = [
-      {
-        name: "PRD 撰写",
-        path: "PRD 撰写",
-        filter: "prd",
-        items: [
-          ["prd", "结构化 PRD：用户故事、验收标准", "写 PRD、用户故事"],
-          ["prd-writer-pro", "结构清晰、内容完整的专业 PRD", "专业 PRD 撰写"],
-          ["prd-reviewer", "10 分制量化评审与扣分说明", "PRD 评审"],
-          ["prd-to-design-doc", "PRD → 设计需求文档", "信息架构、视觉规范"],
-          ["requirements-analysis", "想法拆成 EPIC / 需求 / 用户故事", "MoSCoW、RICE、Kano"],
-          ["software-manager-skill", "产品/开发经理视角的规划支持", "路线图、竞品"],
-        ],
-      },
-      {
-        name: "UI 原型设计",
-        path: "UI 原型设计",
-        filter: "ui",
-        items: [
-          ["prd-to-prototype", "想法 → PRD → 高保真可交互原型", "我想做一个…"],
-          ["design-to-code", "设计稿像素级还原为前端代码", "还原设计图、切图"],
-          ["ui-design", "布局、字体、色彩、无障碍、动效", "做界面、评审设计"],
-          ["frontend-design-pro", "提升设计质量，避免 AI 反模式", "/audit、/polish"],
-          ["wireframe", "ASCII/SVG 线框与用户流", "画线框、梳理流程"],
-          ["afrexai-ui-design-system", "调研 → 规范 → 落地的设计方法论", "设计系统"],
-        ],
-      },
-      {
-        name: "代码重构",
-        path: "代码重构",
-        filter: "refactor",
-        items: [
-          ["code-analyzer", "架构/数据流/业务规则深度分析", "熟悉新仓库、技术债务"],
-          ["code-refactoring", "不改变行为的重构模式", "清理遗留、降复杂度"],
-          ["simplify", "提升清晰度与可维护性", "/simplify"],
-          ["uncle-bob", "Clean Code / SOLID / 整洁架构", "代码坏味道"],
-          ["system-architect", "系统架构与工程标准", "新项目架构"],
-          ["agent-git-oracle", "仓库级技术债务与反模式分析", "仓库体检"],
-        ],
-      },
-      {
-        name: "Bug 排查",
-        path: "Bug 排查",
-        filter: "bug",
-        items: [
-          ["debug-pro", "7 步调试协议 + 多语言命令", "报错怎么查"],
-          ["superpowers-systematic-debugging", "四阶段系统性调试", "测试失败、异常行为"],
-          ["bug-fixing", "零回归修复流", "fix bug、not working"],
-          ["code-fix", "编译/运行时/类型/依赖诊断", "崩溃、构建失败"],
-          ["log-analyzer", "多格式日志解析与关联", "查日志、堆栈"],
-          ["nexus-error-explain", "解释错误并给出修复建议", "这条报错是什么意思"],
-        ],
-      },
-      {
-        name: "自动化测试",
-        path: "自动化测试",
-        filter: "test",
-        items: [
-          ["test-case-generator", "从需求/API/截图生成 Excel 用例", "生成测试用例"],
-          ["test-patterns", "单测/集成/E2E 与覆盖率实践", "搭测试套件"],
-          ["superpowers-tdd", "RED-GREEN-REFACTOR 强制 TDD", "先写测试"],
-          ["api-test-automation", "REST/GraphQL、性能、契约、Mock", "接口自动化"],
-          ["e2e-testing-patterns", "Playwright/Cypress 可靠 E2E", "端到端、防 flaky"],
-          ["afrexai-qa-test-plan", "测试计划、覆盖矩阵与策略", "测试计划"],
-        ],
-      },
-    ];
-
-    function skillHref(kind, pathParts) {
-      if (kind === "core") return `${REPO}/tree/${BRANCH}/skills/${pathParts[0]}`;
-      return `${REPO}/tree/${BRANCH}/agents/${encodeURIComponent(pathParts[0])}/skills/${pathParts[1]}`;
+    function esc(value) {
+      return String(value).replace(/[&<>"']/g, (c) => ({"&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"})[c]);
     }
-
-    function skillRow([name, desc, trigger], opts) {
-      const { domain, href, copyText, copyLabel = "复制安装命令" } = opts;
-      const q = `${name} ${desc} ${trigger}`.toLowerCase();
-      return `<article class="skill" data-domain="${domain}" data-q="${q.replace(/"/g, "&quot;")}">
-        <div class="skill-name"><a href="${href}" target="_blank" rel="noopener">${name}</a></div>
-        <div class="skill-desc">${desc}</div>
-        <div class="skill-trigger">${trigger}</div>
-        <button type="button" class="skill-copy" data-text="${copyText.replace(/"/g, "&quot;")}" title="${copyLabel}" aria-label="${copyLabel}：${name}">复制</button>
-      </article>`;
+    function installCommand(names) {
+      return `npx skills add ${catalog.repository} --skill ${names.join(" ")} -g -y`;
     }
+    document.getElementById("group-filters").innerHTML =
+      '<button type="button" class="chip" data-filter="all" aria-pressed="true">全部</button>' +
+      catalog.groups.map((g) => `<button type="button" class="chip" data-filter="${esc(g.id)}" aria-pressed="false">${esc(g.title)}</button>`).join("");
 
-    document.getElementById("core-skills").innerHTML = core.map((item) =>
-      skillRow(item, {
-        domain: "core",
-        href: skillHref("core", [item[0]]),
-        copyText: `npx skills add maoyao0607/ai-skills@${item[0]} -g -y`,
-      })
-    ).join("");
-
-    document.getElementById("agent-domains").innerHTML = domains.map((d) => `
-      <div class="domain-block" data-domain-block="${d.filter}">
-        <h3 class="domain-title">${d.name}</h3>
-        <div class="panel">
-          <div class="skill-list">${d.items.map((item) => {
-            const href = skillHref("agent", [d.path, item[0]]);
-            return skillRow(item, {
-              domain: d.filter,
-              href,
-              copyText: href,
-              copyLabel: "复制仓库链接",
-            });
-          }).join("")}</div>
-        </div>
-      </div>
-    `).join("");
-
-    document.getElementById("cmd-per-skill").innerHTML = core.map(([name], i) => {
-      const cmd = `npx skills add maoyao0607/ai-skills@${name} -g -y`;
-      const id = `cmd-s-${i}`;
-      return `<div class="cmd-row">
-        <span>${name}</span>
-        <code id="${id}">${cmd}</code>
-        <button type="button" class="btn btn-primary copy" data-copy="${id}">复制</button>
-      </div>`;
+    document.getElementById("skill-groups").innerHTML = catalog.groups.map((group) => {
+      const members = catalog.skills.filter((s) => s.group === group.id);
+      return `<div class="domain-block" data-domain-block="${esc(group.id)}">
+        <h3 class="domain-title">${esc(group.title)} · ${members.length}</h3>
+        <p>${esc(group.guidance)}</p>
+        <div class="panel"><div class="skill-list">${members.map((s) => {
+          const query = [s.name, s.summary, ...s.tags, ...s.notes].join(" ").toLowerCase();
+          const href = `${sourceRoot}/${s.path.split('/').map(encodeURIComponent).join('/')}/SKILL.md`;
+          return `<article class="skill" data-domain="${esc(s.group)}" data-q="${esc(query)}">
+            <div class="skill-name"><a href="${esc(href)}" target="_blank" rel="noopener">${esc(s.name)}</a></div>
+            <div class="skill-desc">${esc(s.summary)}${s.notes.map((n) => `<p class="skill-note">${esc(n)}</p>`).join("")}</div>
+            <div class="skill-trigger">${esc(s.tags.join(" · "))}</div>
+            <button type="button" class="skill-copy" data-text="${esc(installCommand([s.name]))}" title="复制安装命令" aria-label="复制安装命令：${esc(s.name)}">复制</button>
+          </article>`;
+        }).join("")}</div></div></div>`;
     }).join("");
 
     function commandRow(label, command, id) {
@@ -1862,6 +1766,36 @@
       commandRow(s.name, installCommand([s.name]), `cmd-s-${i}`)).join("");
     document.getElementById("cmd-groups").innerHTML = catalog.groups.map((g, i) =>
       commandRow(g.title, installCommand(catalog.skills.filter((s) => s.group === g.id).map((s) => s.name)), `cmd-g-${i}`)).join("");
+
+    /* —— 领域 Agents：从 catalog.previous_path 还原 agents/<领域>/skills/<name>/ 归属 —— */
+    const agentDomains = (() => {
+      const byDomain = new Map();
+      catalog.skills.forEach((s) => {
+        const m = /^agents\/([^/]+)\/skills\//.exec(s.previous_path || "");
+        if (!m) return;
+        if (!byDomain.has(m[1])) byDomain.set(m[1], []);
+        byDomain.get(m[1]).push(s);
+      });
+      return [...byDomain.entries()].map(([name, skills]) => ({ name, skills }));
+    })();
+
+    document.getElementById("agent-domains").innerHTML = agentDomains.map(({ name, skills }, i) => {
+      const docHref = `${sourceRoot}/docs/workflows/${encodeURIComponent(name)}.md`;
+      const id = `cmd-a-${i}`;
+      const links = skills.map((s) => {
+        const href = `${sourceRoot}/${s.path.split('/').map(encodeURIComponent).join('/')}/SKILL.md`;
+        return `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(s.name)}</a>`;
+      }).join(" · ");
+      return `<div class="domain-block">
+        <h3 class="domain-title">${esc(name)} · ${skills.length}</h3>
+        <div class="panel">
+          <p>${links}</p>
+          <div class="cmd-row"><span>整包安装</span><code id="${id}">${esc(installCommand(skills.map((s) => s.name)))}</code>
+            <button type="button" class="btn btn-primary copy" data-copy="${id}">复制</button></div>
+          <p><a href="${esc(docHref)}" target="_blank" rel="noopener">查看「${esc(name)}」工作流与选择建议</a></p>
+        </div>
+      </div>`;
+    }).join("");
 
     const live = document.getElementById("copy-live");
     async function copyText(text, btn) {
